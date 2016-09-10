@@ -1,0 +1,5 @@
+{
+    "server_port": "30000",
+    "mongodb_url": "mongodb://localhost:27017/server",
+    "jwt_secret": "shhhhhhared-secret"
+}

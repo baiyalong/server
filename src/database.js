@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-// var initAdmin = require('./user').initAdmin;
 
+mongoose.Promise = global.Promise;
 exports.connect = function (mongodb_url, callback) {
     mongoose.connect(mongodb_url);
     var db = mongoose.connection;

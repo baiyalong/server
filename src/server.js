@@ -1,8 +1,8 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
-
-var auth = require('./auth');
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
 var user = require('./user');
 var structure = require('./structure');
 var content = require('./content');
@@ -12,38 +12,63 @@ exports.start = function (server_port, jwt_secret, db) {
 
     var app = express();
     app.use(bodyParser.json()); // for parsing application/json
-
-
-
-
-    // auth.route(app, db, jwt_secret)
-
+    app.use(expressJwt({ secret: jwt_secret }).unless({ path: ['/', '/login', '/project/:project/service/:service/version/:version'] }));
+    app.use(function (err, req, res, next) {
+        if (err.name === 'UnauthorizedError' ||
+            err.name === 'TokenExpiredError' ||
+            err.name === 'JsonWebTokenError') {
+            res.status(401).send({ error: err.message });
+        }
+    });
 
     app.get('/',
         function (req, res) {
             res.end()
         })
 
+    app.post('/login', function (req, res) {
+        user.findOne({ username: req.body.username }, function (err, doc) {
+            if (err) res.send(user.errMsg(err));
+            else if (!doc) res.send({ error: '用户不存在！' });
+            else if (doc.password !== req.body.password) res.send({ error: '密码错误！' });
+            else jwt.sign(doc, jwt_secret, { expiresIn: '30m' }, function (err, token) {
+                res.send(err ? { error: err.message } : { token: token });
+            })
+        })
+    });
+
+
+    app.post('/logout', function (req, res) {
+        //
+        res.end()
+    });
 
 
     app.get('/users', function (req, res) {
-
-    })
-    app.get('/user/:userId', function (req, res) {
-
-    })
-    app.post('/user', function (req, res) {
-        user.create(req.body, function (err) {
-            user.errMsg(err)
-            res.send(err ? { error: err.message } : null)
+        user.find({}, function (err, docs) {
+            res.send(err ? user.errMsg(err) : docs)
         })
     })
-    // app.update('/user/:userId', function (req, res) {
-
-    // })
-    // app.delete('/user/:userId', function (req, res) {
-
-    // })
+    app.get('/user/:userId', function (req, res) {
+        user.findById(req.params.userId, function (err, doc) {
+            res.send(err ? user.errMsg(err) : doc)
+        })
+    })
+    app.post('/user', function (req, res) {
+        user.create(req.body, function (err, doc) {
+            res.send(err ? user.errMsg(err) : doc)
+        })
+    })
+    app.put('/user/:userId', function (req, res) {
+        user.findOneAndUpdate({ _id: req.params.userId }, { $set: req.body }, function (err, doc) {
+            res.send(err ? user.errMsg(err) : doc)
+        })
+    })
+    app.delete('/user/:userId', function (req, res) {
+        user.findOneAndRemove({ _id: req.params.userId }, function (err, doc) {
+            res.send(err ? user.errMsg(err) : doc)
+        })
+    })
 
 
 
@@ -51,13 +76,4 @@ exports.start = function (server_port, jwt_secret, db) {
         console.log('server start ......');
     });
 
-    // user.insert({
-    //     username: 'ad'
-    // }, function (err, res) {
-    //     console.log(err)
-    //     console.log('------------')
-    //     console.log(err.toJSON())
-    //     console.log('-------==================-----')
-    //     console.log(err.toString())
-    // })
 }

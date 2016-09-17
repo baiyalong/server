@@ -24,4 +24,17 @@ user.errMsg = function (error) {
     return { error: msg }
 }
 
+//init-------
+let admin = {
+    username: 'admin',
+    password: 'qwe'
+}
+user.findOne(admin, function (err, doc) {
+    if (!doc)
+        user.create(admin)
+})
+//-----------
+
+
+
 module.exports = user;

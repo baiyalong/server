@@ -44,7 +44,7 @@ exports.start = function (server_port, jwt_secret, db) {
     });
 
 
-    app.get('/api/users', function (req, res) {
+    app.get('/api/user', function (req, res) {
         user.find({}, function (err, docs) {
             res.send(err ? user.errMsg(err) : docs)
         })

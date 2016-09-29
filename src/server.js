@@ -65,10 +65,15 @@ exports.start = function (server_port, jwt_secret, db) {
             res.send(err ? user.errMsg(err) : doc)
         })
     })
-    app.delete('/api/user/:userId', function (req, res) {
-        user.findOneAndRemove({ _id: req.params.userId }, function (err, doc) {
-            res.send(err ? user.errMsg(err) : doc)
-        })
+    app.delete('/api/user/', function (req, res) {
+        let arr = req.body;
+        if (arr && Array.isArray(arr) && arr.length) {
+            user.remove({ _id: { $in: arr } }, function (err, doc) {
+                res.send(err ? user.errMsg(err) : doc)
+            })
+        } else
+            res.send({ error: '参数错误！' })
+
     })
 
 

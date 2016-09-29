@@ -1,3 +1,5 @@
+'use strict'
+
 var server = require('./server');
 var database = require('./database');
 var config = require('./config');

@@ -1,3 +1,5 @@
+'use strict'
+
 
 exports.route = function (app, db) {
 

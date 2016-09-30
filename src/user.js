@@ -29,7 +29,8 @@ user.errMsg = function (error) {
 //init-------
 let admin = {
     username: 'admin',
-    password: 'qwe'
+    password: 'qwe',
+    role: 'admin'
 }
 user.findOne(admin, function (err, doc) {
     if (!doc)

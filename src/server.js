@@ -50,9 +50,9 @@ exports.start = function (server_port, jwt_secret, db) {
                 res.send(err ? {
                     error: err.message
                 } : {
-                    username: doc.username,
-                    token: token
-                });
+                        username: doc.username,
+                        token: token
+                    });
             })
         })
     });
@@ -65,7 +65,7 @@ exports.start = function (server_port, jwt_secret, db) {
 
     app.route('/api/user')
         .get(function (req, res) {
-            user.find({}, function (err, docs) {
+            user.find(user.search(req.query.search), function (err, docs) {
                 res.send(err ? user.errMsg(err) : docs)
             })
         })
@@ -84,12 +84,12 @@ exports.start = function (server_port, jwt_secret, db) {
                         $in: arr
                     }
                 }, {
-                    $set: update
-                }, {
-                    multi: true
-                }, function (err, doc) {
-                    res.send(err ? user.errMsg(err) : doc)
-                })
+                        $set: update
+                    }, {
+                        multi: true
+                    }, function (err, doc) {
+                        res.send(err ? user.errMsg(err) : doc)
+                    })
             } else
                 res.send({
                     error: '参数错误！'

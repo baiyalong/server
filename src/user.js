@@ -38,6 +38,13 @@ user.findOne(admin, function (err, doc) {
 })
 //-----------
 
+user.search = function (ss) {
+    if (ss === undefined) return {}
+    var r = new RegExp(ss)
+    var f = ['username', 'role', 'description']
+    var or = f.map(e => { return { [e]: r } })
+    return { $or: or }
+}
 
 
 module.exports = user;

@@ -17,10 +17,13 @@
   },
   "homepage": "https://github.com/baiyalong/server#readme",
   "dependencies": {
+    "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express-jwt": "^5.0.0",
     "jsonwebtoken": "^7.1.9",
-    "mongoose": "^4.6.0"
+    "mongoose": "^4.6.0",
+    "redis": "^2.6.2",
+    "socket.io": "^1.4.8"
   }
 }

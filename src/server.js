@@ -7,14 +7,22 @@ var expressJwt = require('express-jwt');
 var user = require('./user');
 var structure = require('./structure');
 var content = require('./content');
+var config = require('./config');
 
-
-exports.start = function (server_port, jwt_secret, db) {
-
+exports.start = function (callback) {
     var app = express();
+    middleware(app);
+    loginRoute(app);
+    userRoute(app);
+    var server = app.listen(config.server_port);
+    callback(null, server)
+}
+
+
+function middleware(app) {
     app.use(bodyParser.json()); // for parsing application/json
     app.use(expressJwt({
-        secret: jwt_secret
+        secret: config.jwt_secret
     }).unless({
         path: ['/api/', '/api/login', '/api/project/:project/service/:service/version/:version']
     }));
@@ -27,12 +35,9 @@ exports.start = function (server_port, jwt_secret, db) {
             });
         }
     });
+}
 
-    app.get('/api/',
-        function (req, res) {
-            res.end()
-        })
-
+function loginRoute(app) {
     app.post('/api/login', function (req, res) {
         user.findOne({
             username: req.body.username
@@ -44,7 +49,7 @@ exports.start = function (server_port, jwt_secret, db) {
             else if (doc.password !== req.body.password) res.send({
                 error: '密码错误！'
             });
-            else jwt.sign(doc, jwt_secret, {
+            else jwt.sign(doc, config.jwt_secret, {
                 expiresIn: '30m'
             }, function (err, token) {
                 res.send(err ? {
@@ -56,13 +61,13 @@ exports.start = function (server_port, jwt_secret, db) {
             })
         })
     });
-
-
     app.post('/api/logout', function (req, res) {
         //
         res.end()
     });
+}
 
+function userRoute(app) {
     app.route('/api/user')
         .get(function (req, res) {
             user.find(user.search(req.query.search), function (err, docs) {
@@ -110,11 +115,4 @@ exports.start = function (server_port, jwt_secret, db) {
                     error: '参数错误！'
                 })
         })
-
-
-
-    app.listen(server_port, function () {
-        console.log('server start ......');
-    });
-
 }

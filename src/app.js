@@ -1,12 +1,25 @@
 'use strict'
 
-var server = require('./server');
+var async = require('async');
 var database = require('./database');
-var config = require('./config');
+var server = require('./server');
+var io = require('./io');
 
-database.connect(config.mongodb_url, function () {
-    server.start(config.server_port, config.jwt_secret);
+
+async.waterfall([
+    function (callback) {
+        database.connect(callback)
+    },
+    function (callback) {
+        server.start(callback)
+    },
+    function (app, callback) {
+        io.start(app, callback)
+    },
+], function (err, res) {
+    console.log(err ? err : 'server start ...')
 })
+
 
 process.on('uncaughtException', function (err) {
     console.error(err);

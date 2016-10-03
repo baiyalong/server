@@ -2,6 +2,7 @@
 
 var async = require('async');
 var database = require('./database');
+var redis = require('./redis');
 var server = require('./server');
 var io = require('./io');
 
@@ -9,6 +10,9 @@ var io = require('./io');
 async.waterfall([
     function (callback) {
         database.connect(callback)
+    },
+    function (callback) {
+        redis.connect(callback)
     },
     function (callback) {
         server.start(callback)

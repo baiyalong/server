@@ -18,6 +18,7 @@ exports.connect = function (callback) {
 
 }
 
+//--for server restart
 function init(disconnect, callback) {
     async.waterfall([
         callback => {
@@ -114,10 +115,9 @@ exports.user = {
             }
         ], callback)
     },
-    informRole: (conns, role, callback) => {
+    inform: (conns, role, callback) => {
         // io.sockets.socket(socketid).emit('message', 'for your eyes only');
     },
-    score: () => { },
     retrieve: (search, callback) => retrieve('user:', ['online', 'role'], search, callback)
 }
 
@@ -153,4 +153,35 @@ function retrieve(key, fields, search, callback) {
 
 
 
+
+exports.score = {
+    judge: (user, work, score, callback) => {
+        async.waterfall([
+            callback => {
+                client.zadd('score:' + work, score, 'user:' + user, callback)
+            },
+            (res, callback) => {
+                client.zrange('score:' + work, 0, -1, 'withscores', callback)
+            },
+            (res, callback) => {
+                var score = res.filter((e, i) => i % 2).slice(1, -1).reduce((p, c, i, a) => p + c / a.length, 0).toFixed(2)
+                client.zadd('score:', score, 'work:' + work, callback)
+            }
+        ], callback)
+
+    },
+    broadcast: () => {
+
+    },
+    reset: (callback) => {
+        async.waterfall([
+            callback => {
+                client.keys('score:*', callback)
+            },
+            (res, callback) => {
+                client.batch(res.map(e => ['del', e])).exec(callback)
+            }
+        ], callback)
+    }
+}
 

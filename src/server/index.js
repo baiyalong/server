@@ -4,10 +4,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
-var user = require('./user');
-var structure = require('./structure');
-var content = require('./content');
-var config = require('./config');
+var user = require('../mongo/user');
+var structure = require('../mongo/structure');
+var config = require('../config');
 
 exports.start = function (callback) {
     var app = express();

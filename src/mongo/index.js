@@ -1,7 +1,7 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var config = require('./config');
+var config = require('../config');
 
 mongoose.Promise = global.Promise;
 exports.connect = function (callback) {

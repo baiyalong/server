@@ -79,6 +79,9 @@ exports.user = {
             if (callback) callback(err)
         })
     },
+    roleChange: (user, role, callback) => {
+
+    },
     reset: (callback) => {
         async.waterfall([
             callback => {

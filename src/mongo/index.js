@@ -8,7 +8,7 @@ exports.connect = function (callback) {
     mongoose.connect(config.mongodb_url);
     var db = mongoose.connection;
     db.on('error', console.error.bind(console));
-    db.once('open', callback);
+    db.once('open', () => console.log(Date(), 'mongo connect') || callback(null));
 }
 
 

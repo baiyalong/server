@@ -12,7 +12,7 @@ async.waterfall([
     callback => redis.connect(callback),
     callback => server.start(callback),
     (app, callback) => io.start(app, callback),
-])
+], err => console.log(Date(), err ? err : '------start------'))
 
 
 process.on('uncaughtException', err => console.error(err));

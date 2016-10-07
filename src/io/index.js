@@ -3,35 +3,39 @@
 
 var socketio = require('socket.io');
 var redis = require('../redis');
-var user = require('./user');
-var role = require('./role');
-var work = require('./work');
-var score = require('./score');
+var User = require('./user');
+var Role = require('./role');
+var Work = require('./work');
+var Score = require('./score');
 
-// var io = null
+var io = null
+
 exports.start = function (app, callback) {
-    var io = socketio(app);
+    io = socketio(app);
     io.on('connection', socket => {
         var conn = socket.conn.id;
-        socket.on('user.connect', (usr, callback) => user.connect(Object.assign(usr, { conn }), callback));
-        socket.on('disconnect', () => user.disconnect(conn));
+        socket.on('user.connect', (user, callback) => User.connect(Object.assign(user, { conn }), (err, user) => callback(err, user) || socket.join(user.role) && io.to('admin').emit('user.set', user)));
+        socket.on('disconnect', () => User.disconnect({ conn }, (err, user) => socket.leave(user.role) && io.to('admin').emit('user.set', user)));
+        socket.on('user.getAll', User.getAll);
 
-        socket.on('role.change', role.change);
-        socket.on('role.randomJudge', role.randomJudge);
+        socket.on('role.change', Role.change);
+        socket.on('role.randomJudge', Role.randomJudge);
 
-        socket.on('work.insert', work.insert);
-        socket.on('work.delete', work.delete);
-        socket.on('work.update', work.update);
-        socket.on('work.retrieve', work.retrieve);
+        socket.on('work.insert', Work.insert);
+        socket.on('work.delete', Work.delete);
+        socket.on('work.update', Work.update);
+        socket.on('work.retrieve', Work.retrieve);
 
-        socket.on('score.judge', score.judge);
+        socket.on('score.judge', Score.judge);
+
+        socket.on('error', err => console.error(err.message))
     });
-    callback()
+    console.log(Date(), 'io start')
+    callback(null)
 }
 
 
-
-
+// exports.io = () => io
 
 
 

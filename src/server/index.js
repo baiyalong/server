@@ -14,6 +14,7 @@ exports.start = function (callback) {
     loginRoute(app);
     userRoute(app);
     var server = app.listen(config.server_port);
+    console.log(Date(), 'server start')
     callback(null, server)
 }
 

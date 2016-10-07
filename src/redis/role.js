@@ -1,9 +1,6 @@
 
-
-var redisClient = require('./index').redisClient
-
-exports.add = (role, conn, callback) => redisClient().sadd('role:' + role, conn, callback)
-exports.rm = (role, conn, callback) => redisClient().srem('role:' + role, conn, callback)
+const set = require('./common/set');
+const tag = require('./common/tag');
 
 
-exports.get = (role, callback) => redisClient().smembers('role:' + role, callback)
+module.exports = tag(set, 'role:')

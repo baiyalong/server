@@ -1,13 +1,6 @@
-const hash = require('./hash');
 
-const tag = 'work:';
+const hash = require('./common/hash');
+const tag = require('./common/tag');
 
 
-
-exports.get = hash.get(tag)
-
-exports.getAll = hash.getAll(tag)
-
-exports.set = hash.set(tag)
-
-exports.del = hash.del(tag)
+module.exports = tag(hash, 'work:')

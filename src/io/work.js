@@ -1,16 +1,16 @@
 const async = require('async');
-const Work = require('../redis/work');
-const Score = require('../redis/score');
+const work = require('../redis/work');
+const score = require('../redis/score');
 
 
 
-exports.set = (work, callback) => Work.set(work.id, callback)
+exports.set = (w, callback) => work.set(w.id, callback)
 
 
-exports.del = (search, callback) => {
+exports.del = (id, callback) => {
     async.waterfall([
-        callback => Work.del(work.id, err => callback(err)),
-        callback => Score.del(work.id, callback)
+        callback => work.del(w.id, err => callback(err)),
+        callback => score.del(w.id, callback)
     ], callback)
 }
 
@@ -18,7 +18,7 @@ exports.del = (search, callback) => {
 exports.getAll = callback => {
     var res = {}
     async.waterfall([
-        callback => Work.getAll(work.id, (err, works) => Object.assign(res, { works }) && callback(err)),
-        callback => Score.getAll(work.id, (err, scores) => Object.assign(res, { scores }) && callback(err))
+        callback => work.getAll(w.id, (err, works) => Object.assign(res, { ws }) && callback(err)),
+        callback => score.getAll(w.id, (err, scores) => Object.assign(res, { ss }) && callback(err))
     ], err => callback(err, res))
 }

@@ -1,14 +1,15 @@
 
-var Role = require('../redis/role');
+const async = require('async');
+const user = require('../redis/user');
+const role = require('../redis/role');
 
 
-exports.change = (user, callback) => {
-
-}
-
-
-exports.randJudge = (num, callback) => {
+exports.change = (u, callback) => {
 
 }
 
-exports.get = Role.get
+
+exports.randJudge = (u, callback) => {
+
+}
+

@@ -7,3 +7,8 @@ exports.set = (user, work, score, callback) => {
 }
 
 
+
+
+exports.calculate = () => {
+
+}

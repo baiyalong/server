@@ -1,7 +1,8 @@
 
-var async = require('async');
-var redis = require("redis");
-var config = require('../config');
+const async = require('async');
+const redis = require("redis");
+const config = require('../config');
+
 var client = null;
 
 

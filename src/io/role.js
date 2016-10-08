@@ -7,7 +7,7 @@ exports.change = (user, callback) => {
 }
 
 
-exports.randomJudge = (num, callback) => {
+exports.randJudge = (num, callback) => {
 
 }
 

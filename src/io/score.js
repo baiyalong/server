@@ -1,10 +1,9 @@
 
 
-exports.judge = (user,work,score,callback)=>{
+exports.set = (user, work, score, callback) => {
+
+    // callback scores
 
 }
 
 
-function  broadcast(params) {
-    
-}

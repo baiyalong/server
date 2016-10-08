@@ -1,6 +1,6 @@
 {
     "server_port": "30000",
-    "mongodb_url": "mongodb://69.163.34.151:27017/server",
+    "mongodb_url": "mongodb://127.0.0.1:27017/server",
     "redis_url": "redis://127.0.0.1:6379",
     "jwt_secret": "shhhhhhared-secret"
 }
